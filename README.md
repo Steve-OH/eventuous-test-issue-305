@@ -1,5 +1,5 @@
 This repository contains a simple ASP .NET Core project that reproduces a bug 
-described in https://github.com/Eventuous/eventuous/issues/???.
+described in https://github.com/Eventuous/eventuous/issues/305.
 
 ##### Test conditions
 * Operating system: Windows 10 Professional, version 22H2, build 19045.3803
