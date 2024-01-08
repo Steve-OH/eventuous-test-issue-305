@@ -86,7 +86,7 @@ public class DummyEventHandler : Eventuous.Subscriptions.EventHandler
 {
     public DummyEventHandler(string connectionString, string schemaName)
     {
-        var sql = $"INSERT INTO [{schemaName}].Output (Id, Value) VALUES(@id, @value)";
+        var sql = @$"SELECT * FROM [{schemaName}].Output";
 
         On<DummyEvent>(async context =>
         {
@@ -95,13 +95,12 @@ public class DummyEventHandler : Eventuous.Subscriptions.EventHandler
             {
                 await using var connection = new SqlConnection(connectionString);
                 await using var command = connection.CreateCommand();
+                await connection.OpenAsync();
                 command.CommandText = sql;
                 command.Parameters.AddWithValue("@id", context.Message.Id);
                 command.Parameters.AddWithValue("@value", context.Message.Value);
-                await connection.OpenAsync();
                 // ======== un-comment the following line to display the errant behavior
-                //await command.ExecuteNonQueryAsync();
-
+                await using var reader = await command.ExecuteReaderAsync();
             }
             catch (Exception ex)
             {
