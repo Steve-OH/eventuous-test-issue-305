@@ -88,23 +88,25 @@ public class DummyEventHandler : Eventuous.Subscriptions.EventHandler
     {
         var sql = @$"SELECT * FROM [{schemaName}].Output";
 
-        On<DummyEvent>(async context =>
+        On<DummyEvent>(context =>
         {
             Console.WriteLine($"{context.Message.Id}: {context.Message.Value}");
             try
             {
-                await using var connection = new SqlConnection(connectionString);
-                await using var command = connection.CreateCommand();
-                await connection.OpenAsync();
+                using var connection = new SqlConnection(connectionString);
+                using var command = connection.CreateCommand();
+                connection.Open();
                 command.CommandText = sql;
                 command.Parameters.AddWithValue("@id", context.Message.Id);
                 command.Parameters.AddWithValue("@value", context.Message.Value);
                 // ======== un-comment the following line to display the errant behavior
-                await using var reader = await command.ExecuteReaderAsync();
+                using var reader = command.ExecuteReader();
+                return new ValueTask();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.ToString());
+                return new ValueTask();
             }
         });
     }
