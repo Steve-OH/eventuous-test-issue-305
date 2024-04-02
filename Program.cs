@@ -2,7 +2,6 @@ using Eventuous;
 using Eventuous.SqlServer;
 using Eventuous.SqlServer.Subscriptions;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection1;
 using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
